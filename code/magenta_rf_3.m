@@ -14,7 +14,8 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
     % 
     % Author:   Murat Cokol
     % Created:  October 23, 2018
-    % Updates:  September 17, 2020 (Carolina H. Chung)
+    % Updates:  October 20, 2020 (Carolina H. Chung)
+    %           September 17, 2020 (Carolina H. Chung)
     %           August 27, 2020 (Carolina H. Chung)
     
     % I/O
@@ -46,22 +47,26 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
         chemgen = trainchemgen;             % chemogenomic data
         alldrugs = traindrugs;              % drug list
         interactions = train_interactions;  % interaction names
+        traindiffdat1xxz2 = zeros(2*size(chemgen,1), size(interactions,1)); 
         for i = 1:size(interactions,1)
             ix1 = find(ismember(alldrugs, interactions(i,:)));
             t1 = chemgen(:,ix1);
             t2 = sum(t1,2) * 2/length(ix1); % sigma scores
-            traindiffdat1xxz2(:,i) = [t2; [(sum(logical(t1')) ==1)]'];
+            traindiffdat1xxz2(:,i) = [t2; (sum(logical(t1), 2) == 1)];
         end
     elseif (indigo_mode == 2) || (indigo_mode == 0) % testing mode
         chemgen = testchemgen;              % chemogenomic data
         alldrugs = testdrugs;               % drug list
         interactions = test_interactions;   % interaction names
+        testdiffdat1xxz2 = zeros(2*size(chemgen,1), size(interactions,1)); 
         for i = 1:size(interactions,1)
             ix1 = find(ismember(alldrugs, interactions(i,:)));
             t1 = chemgen(:,ix1);
             t2 = sum(t1,2) * 2/length(ix1); % sigma scores
-            testdiffdat1xxz2(:,i) = [t2;[(sum(logical(t1')) ==1)]'];
+            testdiffdat1xxz2(:,i) = [t2; (sum(logical(t1), 2) == 1)];
         end
+    else
+        error("Value for 'indigo_mode' is invalid.")
     end
 
 %% RUN RF ALGORITHM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,8 +77,6 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
     elseif indigo_mode == 2
         testxnscores = regRF_predict(testdiffdat1xxz2', magenta_model);
         sigma_delta_scores = testdiffdat1xxz2;
-    else
-        error("Value for 'indigo_mode' is invalid.")
     end
 
 end

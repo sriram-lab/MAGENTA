@@ -83,7 +83,7 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
 
 %% DEFINE INPUTS FOR MAGENTA AND TRAIN MODEL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     traindrugs = unique(train_interactions(:));
-    traindrugs(ismember(traindrugs,{''})) = '';
+    traindrugs(cellfun(@isempty, traindrugs)) = []; 
     [~, pos] = ismember(traindrugs,conditions); 
     trainchemgen = phenotype_data(:,pos);
     [~, magenta_model, sigma_delta_scores] = ...

@@ -14,7 +14,8 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
     % 
     % Author:   Murat Cokol
     % Created:  October 23, 2018
-    % Updates:  September 17, 2020 (Carolina H. Chung)
+    % Updates:  October 21, 2020 (Carolina H. Chung)
+    %           September 17, 2020 (Carolina H. Chung)
     %           August 27, 2020 (Carolina H. Chung)
     
     % I/O
@@ -48,6 +49,9 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
         interactions = train_interactions;  % interaction names
         for i = 1:size(interactions,1)
             ix1 = find(ismember(alldrugs, interactions(i,:)));
+            if numel(ix1) == 1
+                ix1 = repelem(ix1, size(interactions, 2)); 
+            end
             t1 = chemgen(:,ix1);
             t2 = sum(t1,2) * 2/length(ix1); % sigma scores
             traindiffdat1xxz2(:,i) = [t2; [(sum(logical(t1')) ==1)]'];
@@ -58,6 +62,9 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
         interactions = test_interactions;   % interaction names
         for i = 1:size(interactions,1)
             ix1 = find(ismember(alldrugs, interactions(i,:)));
+            if numel(ix1) == 1
+                ix1 = repelem(ix1, size(interactions, 2)); 
+            end
             t1 = chemgen(:,ix1);
             t2 = sum(t1,2) * 2/length(ix1); % sigma scores
             testdiffdat1xxz2(:,i) = [t2;[(sum(logical(t1')) ==1)]'];

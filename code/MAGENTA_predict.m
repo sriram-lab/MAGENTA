@@ -16,7 +16,8 @@ function [test_interactions, testinteractions_scores, ...
     % 
     % Author:   Murat Cokol
     % Created:  October 23, 2018
-    % Updates:  August 27, 2020 (Carolina H. Chung)
+    % Updates:  October 21, 2020 (Carolina H. Chung)
+    %           August 27, 2020 (Carolina H. Chung)
     
     % I/O
     %{
@@ -98,22 +99,22 @@ function [test_interactions, testinteractions_scores, ...
                 drugxn_id(i))) = chemgen_id(i);
         end
     end
-    testdrugs = unique(drugpairsname_cell(:));
-    testdrugs(ismember(testdrugs,{''})) = '';
 
 %% FILTER OUT INTERACTIONS WITHOUT CHEMOGENOMIC DATA %%%%%%%%%%%%%%%%%%%%%%
     ix = ismember(drugpairsname_cell, conditions); 
     ix = (sum(~cellfun(@isempty, drugpairsname_cell), 2)) == sum(ix, 2);
     test_interactions = drugpairsname_cell(ix,:); 
+    testdrugs = unique(test_interactions); 
+    testdrugs(cellfun(@isempty, testdrugs)) = []; 
     
 %% DEFINE INPUTS FOR MAGENTA AND GENERATE PREDICTIONS %%%%%%%%%%%%%%%%%%%%%
     [~, pos] = ismember(testdrugs, conditions); 
-    testchemgen = phenotype_data(:,pos);
+    testchemgen = phenotype_data(:,pos(logical(pos)));
     [testinteractions_scores, magenta_model, sigma_delta_scores] = ...
         magenta_rf_3([], [], [], [], testdrugs, testchemgen, ...
         test_interactions, 2, magenta_model);
     if znorm
         testinteractions_scores = zscore(testinteractions_scores);
     end
-
+    
 end

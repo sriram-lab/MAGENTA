@@ -63,7 +63,7 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
             process_chemgen_v2(chemogenomics_filename, z);
     end
     if ~exist('ml_method','var')
-        ml_method = [];
+        ml_method = 'fitrensemble';
     end
     
 %% CONVERT AND MATCH INTERACTION LABELS WITH CHEMOGENOMIC DATA %%%%%%%%%%%%

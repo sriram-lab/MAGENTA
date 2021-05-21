@@ -72,7 +72,7 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
 
 %% RUN RF ALGORITHM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if magenta_mode == 1 % training
-        if isempty(ml_method)
+        if strcmpij(ml_method, 'regRF')
             magenta_model = regRF_train(traindiffdat1xxz2', trainxnscores);
         elseif strcmpi(ml_method, 'fitrensemble')
             magenta_model = fitrensemble(traindiffdat1xxz2', trainxnscores);

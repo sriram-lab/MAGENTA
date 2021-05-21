@@ -13,10 +13,9 @@ function [phenotype_data, phenotype_labels, conditions] = ...
     % 4. Transform data
     % 5. Define output phenotype variables
     % 
-    % Author:   Murat Cokol
-    % Created:  October 23, 2018
-    % Updates:  September 17, 2020 (Carolina H. Chung)
-    %           August 27, 2020 (Carolina H. Chung)
+    % Author:   Sriram Chandrasekaran 
+    % Created:  2018-10-23
+    % Updated:  2021-05-21 (Carolina H. Chung)
 
     % I/O
     %{
@@ -43,7 +42,7 @@ function [phenotype_data, phenotype_labels, conditions] = ...
 %% LOAD DATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     [phenotype_num, txt] = xlsread(fname);   % numerical data
     probelist = txt(2:end, 1);               % gene names (ECK numbers)
-    conditions = txt(1, 2:end)';             % list of conditions
+    conditions = txt(2, 2:end)';             % list of conditions
 
 %% CONVERT GENE IDs TO STANDARD IDs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     load('ecoli_annotation_data','genenames_array','genenames_bnums')

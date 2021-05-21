@@ -1,8 +1,8 @@
 function [test_interactions, testinteractions_scores, ...
     magenta_model, sigma_delta_scores, ix, phenotype_labels]  = ...
-    MAGENTA_predict(magenta_model, testdata, input_type, ...
+    magenta_predict(magenta_model, testdata, input_type, ...
     annotation_filename, chemogenomics_filename, z, ...
-    phenotype_data, phenotype_labels, conditions, znorm)
+    phenotype_data, phenotype_labels, conditions, znorm, ml_method)
 
     % DESCRIPTION 
     % This function generates interaction score predictions based on a 
@@ -14,15 +14,14 @@ function [test_interactions, testinteractions_scores, ...
     % 3. Filter out interactions without chemogenomic data
     % 4. Define inputs to MAGENTA and generate predictions
     % 
-    % Author:   Murat Cokol
-    % Created:  October 23, 2018
-    % Updates:  October 21, 2020 (Carolina H. Chung)
-    %           August 27, 2020 (Carolina H. Chung)
+    % Author:   Sriram Chandrasekaran
+    % Created:  2018-10-23
+    % Updated:  2021-05-21 (Carolina H. Chung)
     
     % I/O
     %{
     REQUIRED INPUTS: 
-        1. indigo_model:            trained MAGENTA model
+        1. magenta_model:           trained MAGENTA model
         2. test_data:               cell array of drug names or interaction
                                     pair names
            -> note: if drug list is provided, then all pairwise drug
@@ -33,6 +32,7 @@ function [test_interactions, testinteractions_scores, ...
         4. annotation_filename:     filename for matching drug names to 
                                     chemogenomic condition names
         5. chemogenomics_filename:  filename for chemogenomic data
+    
     OPTIONAL INPUTS: 
         1. z:                   threshold value to define significant 
                                 effect on fitness (default: z = 2)
@@ -42,6 +42,7 @@ function [test_interactions, testinteractions_scores, ...
         4. conditions:          list of conditions (i.e. treatments)
         5. znorm:               Boolean flag for normalizing predicted 
                                 scores (default: znorm = true)
+        6. ml_method:           ML method to use for training/testing
     
     OUTPUTS:
         1. test_interactions:   interaction pairs used for model training
@@ -72,6 +73,9 @@ function [test_interactions, testinteractions_scores, ...
     end
     if ~exist('znorm','var') || isempty(znorm) % z transform the output scores
         znorm = true;
+    end
+    if ~exist('ml_method','var')
+        ml_method = [];
     end
 
 %% CONVERT AND MATCH INTERACTION LABELS WITH CHEMOGENOMIC DATA %%%%%%%%%%%%
@@ -112,7 +116,7 @@ function [test_interactions, testinteractions_scores, ...
     testchemgen = phenotype_data(:,pos(logical(pos)));
     [testinteractions_scores, magenta_model, sigma_delta_scores] = ...
         magenta_rf_3([], [], [], [], testdrugs, testchemgen, ...
-        test_interactions, 2, magenta_model);
+        test_interactions, 2, magenta_model, ml_method);
     if znorm
         testinteractions_scores = zscore(testinteractions_scores);
     end

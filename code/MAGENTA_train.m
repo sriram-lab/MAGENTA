@@ -1,8 +1,8 @@
 function [train_interactions, trainxnscores, phenotype_labels, ...
     magenta_model, sigma_delta_scores, conditions] = ...
-    MAGENTA_train(interaction_filename, annotation_filename, ...
+    magenta_train(interaction_filename, annotation_filename, ...
     chemogenomics_filename, z, phenotype_data, phenotype_labels, ...
-    conditions, interaction_scores, interaction_pairs)
+    conditions, interaction_scores, interaction_pairs, ml_method)
 
     % DESCRIPTION 
     % This function constructs a MAGENTA model using regression-based
@@ -14,9 +14,9 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
     % 3. Filter out interactions without chemogenomic data
     % 4. Define inputs to MAGENTA and train model
     % 
-    % Author:   Murat Cokol
-    % Created:  October 23, 2018
-    % Updates:  August 27, 2020 (Carolina H. Chung)
+    % Author:   Sriram Chandrasekaran
+    % Created:  2018-10-23
+    % Updated:  2021-05-21 (Carolina H. Chung)
     
     % I/O
     %{
@@ -25,6 +25,7 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
         2. annotation_filename:     filename for matching drug names to 
                                     chemogenomic condition names
         3. chemogenomics_filename:  filename for chemogenomic data
+    
     OPTIONAL INPUTS: 
         1. z:                   threshold value to define significant 
                                 effect on fitness (default: z = 2)
@@ -34,6 +35,7 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
         4. conditions:          list of conditions (i.e. treatments)
         5. interaction_scores:  numerical array of drug interaction scores
         6. interaction_pairs:   cell array of interaction pair names
+        7. ml_method:           ML method to use for training/testing-
     
     OUTPUTS:
         1. train_interactions:  interaction pairs used for model training
@@ -60,6 +62,9 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
         [phenotype_data, phenotype_labels, conditions] = ...
             process_chemgen_v2(chemogenomics_filename, z);
     end
+    if ~exist('ml_method','var')
+        ml_method = [];
+    end
     
 %% CONVERT AND MATCH INTERACTION LABELS WITH CHEMOGENOMIC DATA %%%%%%%%%%%%
     [~, txt] = xlsread(annotation_filename);
@@ -85,9 +90,9 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
     traindrugs = unique(train_interactions(:));
     traindrugs(cellfun(@isempty, traindrugs)) = []; 
     [~, pos] = ismember(traindrugs,conditions); 
-    trainchemgen = phenotype_data(:,pos);
+    trainchemgen = phenotype_data(:, pos);
     [~, magenta_model, sigma_delta_scores] = ...
         magenta_rf_3(traindrugs, trainchemgen, train_interactions, ...
-        trainxnscores, [], [], [], 1, []);
+        trainxnscores, [], [], [], 1, [], ml_method);
  
 end

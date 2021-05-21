@@ -32,6 +32,9 @@ function deviations = ...
   
 %% INPUT PROCESSING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % ADDED NEW VARIABLE TO ACCOUNT FOR MULTIPLE RF FUNCTIONS (2021-05-21)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if ~exist('ml_method', 'var')
         ml_method = []; 
     end
@@ -51,7 +54,11 @@ function deviations = ...
     teststaphdat1(ix2 + length(phenotype_labels),:) = 0;
     
 %% DETERMINE PREDICTED VARIABLE INTERACTIONS B/T SPECIES %%%%%%%%%%%%%%%%%%
-    if isempty(ml_method)
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % ADDED FUNCTIONALITY TO USE regRF OR fitrensemble (2021-05-21)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    if strcmpi(ml_method, 'regRF')
         testpredictions_staphchem_ecolixns2 = ...
             regRF_predict(teststaphdat1', magenta_model);
         testpredictions_staphchem_ecolixns20 = ...

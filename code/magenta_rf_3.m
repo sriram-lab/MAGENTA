@@ -71,8 +71,12 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
     end
 
 %% RUN RF ALGORITHM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     if magenta_mode == 1 % training
-        if strcmpij(ml_method, 'regRF')
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % ADDED FUNCTIONALITY TO USE regRF OR fitrensemble (2021-05-21)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        if strcmpi(ml_method, 'regRF')
             magenta_model = regRF_train(traindiffdat1xxz2', trainxnscores);
         elseif strcmpi(ml_method, 'fitrensemble')
             magenta_model = fitrensemble(traindiffdat1xxz2', trainxnscores);
@@ -82,7 +86,10 @@ function [testxnscores, magenta_model, sigma_delta_scores] = ...
         sigma_delta_scores = traindiffdat1xxz2;
         testxnscores = [];
     elseif magenta_mode == 2 % testing
-        if isempty(ml_method)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % ADDED FUNCTIONALITY TO USE regRF OR fitrensemble (2021-05-21)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        if strcmpi(ml_method, 'regRF')
             testxnscores = regRF_predict(testdiffdat1xxz2', magenta_model);
         elseif strcmpi(ml_method, 'fitrensemble')
             testxnscores = predict(magenta_model, testdiffdat1xxz2');

@@ -62,6 +62,9 @@ function [train_interactions, trainxnscores, phenotype_labels, ...
         [phenotype_data, phenotype_labels, conditions] = ...
             process_chemgen_v2(chemogenomics_filename, z);
     end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % ADDED NEW VARIABLE TO ACCOUNT FOR MULTIPLE RF FUNCTIONS (2021-05-21)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if ~exist('ml_method','var')
         ml_method = 'fitrensemble';
     end

@@ -74,8 +74,11 @@ function [test_interactions, testinteractions_scores, ...
     if ~exist('znorm','var') || isempty(znorm) % z transform the output scores
         znorm = true;
     end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % ADDED NEW VARIABLE TO ACCOUNT FOR MULTIPLE RF FUNCTIONS (2021-05-21)
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if ~exist('ml_method','var')
-        ml_method = [];
+        ml_method = 'fitrensemble';
     end
 
 %% CONVERT AND MATCH INTERACTION LABELS WITH CHEMOGENOMIC DATA %%%%%%%%%%%%

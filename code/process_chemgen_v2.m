@@ -41,9 +41,9 @@ function [phenotype_data, phenotype_labels, conditions] = ...
     end
     
 %% LOAD DATA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    [phenotype_num, txt] = xlsread(fname);  % numerical data
-    probelist = txt(3:end,1);               % gene names (ECK numbers)
-    conditions = txt(2,2:end)';             % list of conditions
+    [phenotype_num, txt] = xlsread(fname);   % numerical data
+    probelist = txt(2:end, 1);               % gene names (ECK numbers)
+    conditions = txt(1, 2:end)';             % list of conditions
 
 %% CONVERT GENE IDs TO STANDARD IDs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     load('ecoli_annotation_data','genenames_array','genenames_bnums')

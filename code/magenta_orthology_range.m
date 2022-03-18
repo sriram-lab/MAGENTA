@@ -36,7 +36,7 @@ function deviations = ...
     % ADDED NEW VARIABLE TO ACCOUNT FOR MULTIPLE RF FUNCTIONS (2021-05-21)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if ~exist('ml_method', 'var')
-        ml_method = []; 
+        ml_method = 'fitrensemble'; 
     end
 
 %% GET E. COLI MODEL AND ORTHOLOGS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
